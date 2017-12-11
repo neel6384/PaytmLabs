@@ -1,6 +1,7 @@
 # PaytmLabs
 To Run code
-```sbt clean package
+```
+   sbt clean package
    spark-submit --master spark:/<host>:7077 target/scala-2.11/paytmlabs_2.11-0.1.jar 
 ```
 
