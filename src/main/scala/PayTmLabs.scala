@@ -166,10 +166,9 @@ object PayTmLabs {
                                                       MIN(request_timestamp) as start_time, MAX(request_timestamp) as end_time, unix_timestamp(MAX(request_timestamp)) - unix_timestamp(MIN(request_timestamp)) as duration,
                                                       SUM(processing_time) as processing_time,
                                                       SUM(bytes_exchanged) as bytes_exchanged
-                                                FROM logs
-                                                GROUP BY ip, session_id
-                                                ORDER BY ip, session_id
-                                              """)
+                                                  FROM logs
+                                                  GROUP BY ip, session_id
+                                                  ORDER BY ip, session_id """)
 
       sessonizedLogs.createOrReplaceTempView("sessonizedLogs")
       spark.sqlContext.cacheTable("sessonizedLogs") // cache both logs and sessonizedLogs table for better performance
@@ -241,8 +240,7 @@ object PayTmLabs {
                                                           SUM(bytes_exchanged) as bytes_exchanged
                                                         FROM logsById
                                                         GROUP BY id, session_id
-                                                        ORDER BY id, session_id
-                                                    """)
+                                                        ORDER BY id, session_id """)
 
       sessonizedLogsById.createOrReplaceTempView("sessonizedLogsById")
 
@@ -272,16 +270,16 @@ object PayTmLabs {
         2. longest average session duration
       */
 
-      val topEngagedUsersByDurationById = spark.sqlContext.sql("SELECT id, max(duration) as session_duration" +
-                                                            "FROM sessonizedLogsById" +
-                                                            "GROUP BY id ORDER BY MAX(duration) DESC")
+      val topEngagedUsersByDurationById = spark.sqlContext.sql("SELECT id, MAX(duration) as session_duration " +
+                                                                "FROM sessonizedLogsById " +
+                                                                "GROUP BY id ORDER BY MAX(duration) DESC")
 
       saveAsCSV(topEngagedUsersByDurationById.coalesce(1), "topEngagedUsersByDurationById")
 
       val topEngagedUsersByAvgDurationById = spark.sqlContext.sql("SELECT id, AVG(duration) " +
-                                                                "FROM sessonizedLogsById " +
-                                                                "GROUP BY id " +
-                                                                "ORDER BY AVG(duration) DESC ")
+                                                                  "FROM sessonizedLogsById " +
+                                                                  "GROUP BY id " +
+                                                                  "ORDER BY AVG(duration) DESC ")
 
       saveAsCSV(topEngagedUsersByAvgDurationById.coalesce(1), "topEngagedUsersByAvgDurationById")
 
