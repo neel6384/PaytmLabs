@@ -183,7 +183,7 @@ object PayTmLabs {
 
       spark.sqlContext.sql("SELECT AVG(duration) FROM sessonizedLogs").show()
 
-      val avgSessionTimePerIp = spark.sqlContext.sql("SELECT ip, AVG(durataion) FROM sessonizedLogs GROUP BY ip")
+      val avgSessionTimePerIp = spark.sqlContext.sql("SELECT ip, AVG(duration) FROM sessonizedLogs GROUP BY ip")
       saveAsCSV(avgSessionTimePerIp.coalesce(1), "avgSessionTimePerIp")
 
       // Goal 3 Unique URL visits per session
